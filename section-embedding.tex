@@ -147,7 +147,9 @@ The solution of \cref{eq:GPE} provides the electrostatic potential, $\Phi (\text
 
 %The linear equations are solved at user-specified density isosurfaces, and the complexity of the interface between the solvent and solute determines the nature and cost of the implict embedding model applied. 
 
-FHI-aims offers three implicit embedding approaches based on the generalised Poisson equation. The first approach is the \textit{multipole-expansion} (MPE)\cite{filser2021} method, where the dielectric function is represented by a sharp step function of the electron density, leading to a discrete interface between the environment and the embedded system.
+FHI-aims offers three implicit embedding approaches based on the generalised Poisson equation. An additional interface with the Environ package provides further diversity of options for implicit embedding \cite{andreussi2012,filser25}.
+
+The first approach is the \textit{multipole-expansion} (MPE)\cite{filser2021} method, where the dielectric function is represented by a sharp step function of the electron density, leading to a discrete interface between the environment and the embedded system.
 %at a specified electron density.
 The sharp interface in MPE reduces \cref{eq:GPE} to a
 %2-dimensional 
@@ -177,7 +179,7 @@ FHI-aims also supports the non-linear core correction, which remedies the non-ph
 Multipole species are simpler to define, requiring definition of location, multipole order, and charge in the system geometry, with no contribution in the \texttt{control.in} file. Forces are available \textit{via} the Hellmann-Feynman formalism, with the \texttt{qmmm} keyword necessary in the \texttt{control.in} file for forces on multipoles. For all-electron species, spurious Coulomb singularities have been observed when multipoles spatially overlap with an integration grid point (\textit{i.e.}, around real atoms); these singularities can be avoided by ensuring reasonable distance separation ($>5~\textrm{\AA}$) between real and embedding species. A full tutorial showcasing how explict embedding calculations are performed with FHI-aims and ChemShell is given in the software tutorials \cite{qmmm2024}.
 
 % These need expanding slightly.
-\textbf{Implicit embedding} is available \textit{via} a range of input keywords that manage the implementation choice of MPE or MPB, and respective subsettings. The \texttt{solvent} keyword selects between the MPE or MPB models. The options available for MPE include single cavity, piece-wise cavity (MPE-$n$c), and piece-wise solvent representation (MPE-$n$cps), with the latter supporting both molecular and periodic system representations \cite{filser2021,stishenko2024}.
+\textbf{Implicit embedding} is available \textit{via} a range of input keywords that manage the solvent model, and respective subsettings. The \texttt{solvent} keyword selects between the different methods. The options available for MPE include single cavity, piece-wise cavity (MPE-$n$c), and piece-wise solvent representation (MPE-$n$cps), with the latter supporting both molecular and periodic system representations \cite{filser2021,stishenko2024}.
 % JF: I think this better fits in the next section.
 %; forces are in active development.
 % JF: Is the next sentence also true for MPE-ncps?
@@ -187,13 +189,14 @@ For the MPB approach, energies and analytical forces are supported for non-perio
 
 For the COSMO approach, both energies and analytical forces are supported for non-periodic systems. To enable a COSMO calculation, one must add the command \texttt{solvent cosmo} into the \texttt{control.in} file. Two additional inputs are required: the dielectric constant of the medium, specified with \texttt{cosmo\_epsilon $<$value$>$}, and a file that represents the grid points on the dielectric surface. Full details on the format of the grid points file can be found in the FHI-aims manual.
 
+The external package Environ offers a wide range of cavity definitions, electrolyte models and additional energy contributions. Its interface with FHI-aims is kept as generic as possible, thereby making new developments in the Environ package immediately available to users of FHI-aims.\cite{andreussi2012,filser25}
+
 
 \subsection*{Future Plans and Challenges}
 The development and deployment of embedding approaches remains an active domain, with increasing need to understand chemical systems at large scale. Explicit atomistic and electronic embedding can therefore benefit from additional options for defining the environment, \textit{via} either density \cite{huang2011} or wavefunction-based embedding \cite{lee2019}, and these are fields of active on-going research. These developments will allow better representation of short-range interatomic interactions, and the coarser point charge and pseudopotential representations can be deployed at a greater distance from the active centre. Care will be required to manage the calculation model and coupling of energy landscapes accurately and coherently, and work is on-going in this domain within FHI-aims and complementary software packages, such as ChemShell. Furthermore, accessibility is as desirable as functionality, with a need for simpler workflows and transferability of approaches across the physical, chemical, biological, and material domains. Complementary to these aspects is the opportunity to integrate machine-learning representations of surrogate landscapes, as discussed elsewhere in this Roadmap. 
 
 Implicit environment embedding is equally important in future workflows, and will benefit from the forthcoming implementation of forces for the MPE model. These forces are in active development for molecular models but further ambitions exist for this functionality in periodic modelling approaches. 
-The MPB model is complementary and offers further a high degree of flexibility for future implementations of advanced solvation techniques, such as non-linear or non-local dielectric response \cite{ringe2022}, and similar goals exist for extension to periodic modelling. 
-An additional interface with the Environ package is also under development to provide further diversity of options for implicit embedding \cite{andreussi2012}.
+The MPB model is complementary and offers further a high degree of flexibility for future implementations of advanced solvation techniques, such as non-linear or non-local dielectric response \cite{ringe2022}, and similar goals exist for extension to periodic modelling.
 The combined outcome will be access to models for solid/liquid interfaces relevant to the most timely challenges in environmentally-relevant chemistry, such as renewable energy and green catalysis.
 % JF: I rewrote the following sentence to be a bit more specific, here is the original version:
 %Work continues here to improve the scalability of these implicit embedding approaches, by seeking and implementing efficiently scaling sparse solvers such that hierarchical models are not a bottleneck when deployed \cite{stishenko2024}.
